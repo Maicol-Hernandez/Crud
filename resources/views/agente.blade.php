@@ -13,8 +13,9 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    
 
-                    {{ __('You are logged in ADMIN!') }}
+                    {{ __('You are logged in agente!') }}
                 </div>
             </div>
         </div>

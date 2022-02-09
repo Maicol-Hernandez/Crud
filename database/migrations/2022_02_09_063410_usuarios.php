@@ -16,7 +16,9 @@ class Usuarios extends Migration
         //
         Schema::create('usuarios', function (Blueprint $table) {
             
-            $table->engine="InnoDB";
+            $table->engine = 'InnoDB';
+            $table->charset = 'utf8mb4';
+    $table->collation = 'utf8mb4_unicode_ci';
 
             $table->bigIncrements('id');
             $table->string('name');
@@ -24,9 +26,10 @@ class Usuarios extends Migration
             $table->bigInteger('identificacion')->unsigned()->unique();
             $table->string('photo');
             $table->string('password')->nullable();
-            $table->bigInteger('rol_id')->unsigned();
+            $table->bigInteger('rol_id')->unsigned()->unique();
+            // $table->foreign("rol_id")->references("id")->on("rol_usuarios")->onDelete("cascade");
             $table->timestamps();
-            $table->foreign('rol_id')->references('id')->on('rol_usuarios')->onDelete('cascade');
+
         });
     }
 
@@ -38,5 +41,7 @@ class Usuarios extends Migration
     public function down()
     {
         //
+        Schema::dropIfExists('usuarios');
+
     }
 }

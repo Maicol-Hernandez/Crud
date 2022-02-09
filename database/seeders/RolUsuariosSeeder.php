@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RolUsuario;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,23 +18,16 @@ class RolUsuariosSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('rol_usuarios')->insert(
-            [
-                'rol_nombre' => 'Agente',
 
-            ],
-        );
-        DB::table('rol_usuarios')->insert(
-            [
-                'rol_nombre' => 'Administrador',
+        RolUsuario::create([
+            'rol_nombre' => 'Agente',
 
-            ],
-        );
-        DB::table('rol_usuarios')->insert(
-            [
-                'rol_nombre' => 'Supervisor'
-
-            ],
-        );
+        ]);
+        RolUsuario::create([
+            'rol_nombre' => 'Administrador',
+        ]);
+        RolUsuario::create([
+            'rol_nombre' => 'Supervisor'
+        ]);
     }
 }

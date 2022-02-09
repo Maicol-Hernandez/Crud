@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\RolUsuario;
+use App\Models\User;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+
+// use Illuminate\Support\Facades\DB;
+
 
 /**
  * Class UsuarioController
@@ -20,10 +25,13 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = Usuario::paginate();
+        $usuarios = User::paginate();
+        $rol_usuarios = RolUsuario::pluck('rol_nombre', 'id');
 
-        return view('usuario.index', compact('usuarios'))
+
+        return view('usuario.index', compact('usuarios', 'rol_usuarios'))
             ->with('i', (request()->input('page', 1) - 1) * $usuarios->perPage());
+        // return response()->json();
     }
 
     /**
@@ -33,7 +41,7 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        $usuario = new Usuario();
+        $usuario = new User();
         $rol_usuarios = RolUsuario::pluck('rol_nombre', 'id');
         return view('usuario.create', compact('usuario', 'rol_usuarios'));
     }
@@ -46,19 +54,26 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Usuario::$rules, Usuario::$message);
-
+        // request()->validate(Usuario::$rules, Usuario::$message);
         $usuario = request()->except('_token');
         if ($request->hasFile('photo')) {
-            # code...
             $usuario['photo'] = $request->file('photo')->store('uploads', 'public');
-            echo "entra al if" . json_encode($usuario);
+            echo $usuario['photo'];
         }
-        Usuario::insert($usuario);
+
+        User::create([
+            'name' => $usuario['name'],
+            'email' => $usuario['email'],
+            'tipo' => $usuario['tipo'],
+            'photo' => $usuario['photo'],
+            'identificacion' => $usuario['identificacion'],
+            'password' => Hash::make($usuario['password']),
+            // identificacion photo
+        ]);
 
         return redirect()->route('usuarios.index')
             ->with('success', 'Usuario created successfully.');
-        // return response()->json();
+        // return response()->json($usuario);
     }
 
     /**
@@ -69,10 +84,12 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::find($id);
-        $rol_usuarios = RolUsuario::all('rol_nombre', 'id');
-        echo $usuario . $rol_usuarios;
+        $usuario = User::find($id);
+        $rol_usuarios = RolUsuario::pluck('rol_nombre', 'id');
+        // echo "valor del rol" . $rol_usuarios;
         return view('usuario.show', compact('usuario', 'rol_usuarios'));
+        // return response()->json($usuario );
+
     }
 
     /**
@@ -84,7 +101,7 @@ class UsuarioController extends Controller
     public function edit($id)
     {
         $rol_usuarios = RolUsuario::pluck('rol_nombre', 'id');
-        $usuario = Usuario::find($id);
+        $usuario = User::find($id);
         return view('usuario.edit', compact('usuario', 'rol_usuarios'));
     }
 
@@ -95,18 +112,28 @@ class UsuarioController extends Controller
      * @param  Usuario $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Usuario $usuario)
+    public function update(Request $request, User $usuario)
     {
-        request()->validate(Usuario::$rules, Usuario::$message);
 
-        // $usuario = request()->except(['_token', '_method']);
+        // request()->validate(Usuario::$rules, Usuario::$message);
 
+        $datos = request()->except(['_token', '_method']);
 
-        $usuario->update($request->all());
+        if ($request->hasFile('photo')) {
+            # code...
+            Storage::delete(['public/' . $usuario->photo]);
+            $datos['photo'] = request()->file('photo')->store('uploads', 'public');
+        }
+        User::where('id', '=', $usuario->id)->update($datos, [
+            'password' => Hash::make($datos['password']),
+        ]);
 
+        $usuario = User::findOrFail($usuario->id);
 
+        // echo "valor password " . $datos['password'];
         return redirect()->route('usuarios.index')
             ->with('success', 'Usuario updated successfully');
+        // return response()->json($usuario);
     }
 
     /**
@@ -114,20 +141,20 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Usuario $usuario)
+    public function destroy(User $usuario)
     {
 
-        
+
         if (Storage::delete(['public/' . $usuario->photo])) {
             # code...
-            $usuario = Usuario::find($usuario->id)->delete();
+            $usuario = User::find($usuario->id)->delete();
         }
-// echo "valor user" . $usuario;
+        // echo "valor user" . $usuario;
 
 
-        // return redirect()->route('usuarios.index')
-        //     ->with('success', 'Usuario deleted successfully');
+        return redirect()->route('usuarios.index')
+            ->with('success', 'Usuario deleted successfully');
 
-        return response()->json();
+        // return response()->json();
     }
 }

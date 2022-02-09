@@ -13,7 +13,7 @@ Usuario
                     <div style="display: flex; justify-content: space-between; align-items: center;">
 
                         <span id="card_title">
-                            {{ __('Usuario') }}
+                            {{ __('Administrar Usuarios') }}
                         </span>
 
                         <div class="float-right">
@@ -35,27 +35,33 @@ Usuario
                             <thead class="thead">
                                 <tr>
                                     <th>No</th>
-
+                                    <th>Photo</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Identificacion</th>
-                                    <th>Photo</th>
-                                    <th>Rol Id</th>
+                                    <th>Rol</th>
 
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($usuarios as $usuario)
-                                usuario: {{ $usuario }}
+
                                 <tr>
                                     <td>{{ ++$i }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage').'/'.$usuario->photo }}" class="img-thumbnail img-fluid" width="150" alt="">
+                                    </td>
 
-                                    <td>{{ $usuario->name }}</td>
+                                    <td>{{ $usuario->name  }} </td>
                                     <td>{{ $usuario->email }}</td>
                                     <td>{{ $usuario->identificacion }}</td>
-                                    <td>{{ $usuario->photo }}</td>
-                                    <td>{{ $usuario->rol_id }}</td>
+                                    <td>{{ $rol_usuarios[$usuario->tipo] }}</td>
+
+                                    <td>
+
+
+                                    </td>
 
                                     <td>
                                         <form action="{{ route('usuarios.destroy',$usuario->id) }}" method="POST">

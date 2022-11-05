@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\LibroController;
+use App\Http\Controllers\ReservaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsuarioController;
@@ -28,8 +31,14 @@ Auth::routes([
 ]);
 // echo Auth::routes(); 
 
+
+
+
 Route::resource('/usuarios', UsuarioController::class)->middleware('auth');
 Route::resource('rol-usuarios', RolUsuarioController::class)->middleware('auth');
+Route::resource('/libros', LibroController::class)->middleware('auth');
+Route::resource('/categorias', CategoriaController::class)->middleware('auth');
+Route::resource('/reservas', ReservaController::class)->middleware('auth');
 
 Route::get('/agente', [App\Http\Controllers\HomeController::class, 'getAgente'])->name('agente');
 

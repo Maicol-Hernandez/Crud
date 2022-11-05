@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->engine = "InnoDB";
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->increments('id');
+            $table->bigIncrements('id')->index()->unsigned();
             $table->string('name');
             $table->string('email')->unique();
             $table->bigInteger('identificacion')->unique();
@@ -25,8 +25,12 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->bigInteger('tipo')->unsigned(); // 1 = agente, 2 = supervisor, 3 = administrador
+            $table->bigInteger('id_reserva')->unsigned()->index();
             $table->rememberToken();
+            
             $table->foreign("tipo")->references("id")->on("rol_usuarios")->onDelete("cascade");
+            
+            
 
             $table->timestamps();
         });

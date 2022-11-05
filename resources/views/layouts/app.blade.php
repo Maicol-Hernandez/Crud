@@ -45,6 +45,20 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('rol-usuarios.index') }}">{{ __('User rol') }}</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('libros.index') }}">{{ __('Libros') }}</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('categorias.index') }}">{{ __('Categorias') }}</a>
+                        </li>
+
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reservas.index') }}">{{ __('Reservas') }}</a>
+                        </li>
+
                         @endif
 
                     </ul>
@@ -84,8 +98,8 @@
 
                                 <div>
 
-                                <a class="dropdown-item" href="{{ route('usuarios.show',Auth::user()->id) }}">{{__('Profile')}}</a>
-                                   
+                                    <a class="dropdown-item" href="{{ route('usuarios.show',Auth::user()->id) }}">{{__('Profile')}}</a>
+
 
 
                                 </div>

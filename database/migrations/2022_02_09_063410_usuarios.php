@@ -15,10 +15,10 @@ class Usuarios extends Migration
     {
         //
         Schema::create('usuarios', function (Blueprint $table) {
-            
+
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
-    $table->collation = 'utf8mb4_unicode_ci';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->bigIncrements('id');
             $table->string('name');
@@ -29,7 +29,6 @@ class Usuarios extends Migration
             $table->bigInteger('rol_id')->unsigned()->unique();
             // $table->foreign("rol_id")->references("id")->on("rol_usuarios")->onDelete("cascade");
             $table->timestamps();
-
         });
     }
 
@@ -42,6 +41,5 @@ class Usuarios extends Migration
     {
         //
         Schema::dropIfExists('usuarios');
-
     }
 }
